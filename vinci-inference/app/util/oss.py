@@ -137,8 +137,8 @@ class OssClient:
                  cdn=False,
                  internal=3600, 
                  slash_safe=True):
-        if cdn is True:
-            return urljoin(self.cdn, object_name)
+        # if cdn is True:
+        #     return urljoin(self.cdn, object_name)
         
         return self.client.presigned_get_object(self.bucket, object_name)
 
