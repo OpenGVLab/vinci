@@ -201,7 +201,7 @@ class IntervlChat():
 
                     yield response, history
             else:
-                question = '现在视频到了%.1f秒处. ' % timestamp 
+                question = '现在视频到了%.1f秒处. ' % timestamp + question 
                 question = add_history(question, history, self.sep_chat)
                 question = video_prefix + question
 
