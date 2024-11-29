@@ -61,7 +61,7 @@ def add_history(question, history, sep_chat: bool=False, language: str='chn'):
                 res += 'This is the end of the video history that indicates what happened before.\n'
 
         if language == 'chn':
-            res += '请根据当前视频, 同时参照视频历史, 用中文回答我的问题: "%s". 注意如果问题与之前发生的事情有关, 请参考视频历史, 否则请只关注图像信息. 如果问题是对未来的规划,给出最多3个步骤的规划.' % question
+            res += '请根据当前视频, 同时参照视频历史, 用中文回答我的问题: "%s". 注意如果问题与之前发生的事情有关, 请参考视频历史, 否则请只关注图像信息.' % question
         else:
             res += 'Given the current video and using the previous video as reference, answer my question in English: "%s". Note that if the question is about what has been previously done, please only focus on the history. Otherwise, please only focus on the question and the current video input. If the question is about future planning, provide at most 3 steps.' % question
 
@@ -201,6 +201,7 @@ class IntervlChat():
 
                     yield response, history
             else:
+                question = '现在视频到了%.1f秒处. ' % timestamp 
                 question = add_history(question, history, self.sep_chat)
                 question = video_prefix + question
 
