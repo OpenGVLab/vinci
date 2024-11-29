@@ -11,7 +11,9 @@ __pycache__/
 *.tar
 *.jpg
 *.png
-
+Vinci-8B-ckpt/
+Vinci-8B-base/
+seine_weights/
 
 # Distribution / packaging
 .Python
