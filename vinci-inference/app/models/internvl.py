@@ -143,10 +143,10 @@ class IntervlChat():
             question = video_prefix + '现在视频到了 %.1f 秒处. 简单的描述视频中我的动作.' % timestamp
             response, _history = self._chat(self.origin_intervl_model, self.intervl_chat.tokenizer, pixel_values, question, num_patches_list)
             history.append((timestamp, response))
-            print('VL_HISTORY:', _history)
+            # print('VL_HISTORY:', _history)
 
-            print('Real question at %2.1f is |||' % (timestamp), question)
-            print('Answer at %2.1f is ||| '% (timestamp), response)
+            # print('Real question at %2.1f is |||' % (timestamp), question)
+            # print('Answer at %2.1f is ||| '% (timestamp), response)
             
             return response, history
 

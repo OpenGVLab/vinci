@@ -232,7 +232,7 @@ class Chat():
                     else:
                         res += 'When the video is at %.1f seconds, the video contect is "%s". ' % (ts, a.strip())
                 if self.language == 'chn':
-                    res += '以上是所有的视频历史, 表明了之前发生了什么.\n'
+                    res += '以上是所有的视频历史, 表明了之前发生了什么, 如果后面的问题问到了之前发生的事情, 请参照.\n'
                 else:
                     res += 'This is the end of the video history that indicates what happened before.\n'
             if self.use_chat_history and len(self.chat_history)>1:
@@ -254,7 +254,7 @@ class Chat():
                     res += 'This is the end of the chat history. The chat history indicate what our previous chat was, but does not necessarily contain the current information.\n'
 
             if self.language == 'chn':
-                res += '请根据当前视频, 同时参照视频历史, 用中文回答我的问题: "%s". 注意如果问题与之前发生的事情有关, 请参考视频历史, 否则请只关注图像信息.' % question
+                res += '请根据当前视频, 用中文回答我的问题: "%s".' % question
             else:
                 res += 'Given the current video and using the previous video as reference, answer my question in English: "%s". Note that if the question is about what has been previously done, please only focus on the history. Otherwise, please only focus on the question and the current video input. If the question is about future planning, provide at most 3 steps.' % question
 
