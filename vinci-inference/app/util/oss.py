@@ -140,7 +140,7 @@ class OssClient:
         if cdn is True:
             return urljoin(self.cdn, object_name)
         
-        return self.client.sign_url(method, object_name, internal, slash_safe=slash_safe)
+        return self.client.presigned_get_object(self.bucket, object_name)
 
 # object_storage = ObjectStorageManager(config=c)
 
