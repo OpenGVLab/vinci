@@ -1,0 +1,42 @@
+ckpt: '../0200322.pt' 
+save_img_path: "."
+pretrained_model_path: 'stable-diffusion-v1-5/'
+
+finetuned_image_sd_path: null
+
+# model config: 
+model: TAVU
+num_frames: 16
+frame_interval: 1
+image_size: [256, 256]
+
+# model speedup
+use_compile: False
+use_fp16: True
+enable_xformers_memory_efficient_attention: True
+
+# sample config:
+seed:
+run_time: 13
+cfg_scale: 8.0
+sample_method: 'ddim'
+num_sampling_steps: 100
+text_prompt: [
+  'the man is kicking the football'
+]
+
+additional_prompt: ""
+negative_prompt: ""
+do_classifier_free_guidance: True
+
+use_autoregressive: True
+
+input_path: /mnt/hwfile/internvideo/share_data/huangyifei/model_weights/lastim.jpg
+
+researve_frame: 3
+mask_type: "first1"
+use_mask: True
+
+demoimage:
+demotext:
+demosavepath:

@@ -1,0 +1,122 @@
+version: '2'
+
+services:
+  srs:
+    image: registry.cn-hangzhou.aliyuncs.com/ossrs/srs:5
+    container_name: srs
+    restart: always
+    ports:
+      - '1935:1935'
+      - '8080:8080/udp'
+      - '8080:8080/tcp'
+      - '8000:8000/udp'
+      - "1985:1985"
+    volumes:
+      - ./srs/conf/:/usr/local/srs/vinci/
+    environment:
+      - CANDIDATE=${CANDIDATE}
+    command: ./objs/srs -c vinci/vinci.conf
+    privileged: true
+    networks:
+      - vinci_local
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    ports:
+      - '13306:3306'
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./.cache/mysql/data:/bitnami/mysql/data
+    environment:
+      - BITNAMI_DEBUG=true
+      - TZ=Asia/Shanghai
+      - MYSQL_CHARACTER_SET=utf8mb4
+      - MYSQL_COLLATE=utf8mb4_general_ci
+      - MYSQL_ROOT_PASSWORD=123456
+    privileged: true
+    networks:
+      - vinci_local
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    environment:
+      - MINIO_ROOT_USER=minio_admin
+      - MINIO_ROOT_PASSWORD=minio_admin
+    ports:
+      - "19000:9000"
+      - "19001:9001"
+    volumes:
+      - .cache/minio:/data
+      - ./minio/entry.sh:/usr/local/bin/entry.sh
+    privileged: true
+    networks:
+      - vinci_local
+    entrypoint:  /bin/sh -c "/usr/local/bin/entry.sh"
+
+  nginx:
+    image: nginx:1.21-alpine
+    container_name: nginx
+    ports:
+      - "19333:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    privileged: true
+    networks:
+      - vinci_local
+    depends_on:
+      - vinci-be
+      - vinci-fe
+
+  vinci-be:
+    image: crpi-dn1nyq7vw8amhh61.cn-shanghai.personal.cr.aliyuncs.com/vinci-dl/vinci-be:latest
+    container_name: vinci-be
+    restart: always
+    environment:
+      - env=private
+      - srs_lb_host=${CANDIDATE}
+      - srs_host=srs
+      - rtmp_port=1935
+      - webrtc_port=8080
+      - api_port=8080
+      - api_auth_token=cGpsYWI6UFpNdmM4VWhKN3hNQ2JlTQ==
+      - internal_app_name=internal
+      - mysql_host=mysql:3306
+      - mysql_user=root
+      - mysql_password=123456
+      - oss_access_key_id=minio_admin
+      - oss_access_key_secret=minio_admin
+      - oss_endpoint=minio:9000
+      - oss_bucket=vinci
+      - oss_external_endpoint=http://${CANDIDATE}:19000
+      - intern_endpoint=http://10.6.20.128:18081
+      - retrieval_endpoint=http://10.6.20.128:18082
+      - speech_language=en-US
+      - tts=0
+      - puyu_base_url=https://puyu.openxlab.org.cn/puyu/api/v1/
+      - puyu_api_key=eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFM1MTIifQ.eyJqdGkiOiI1MDE4MjM4OSIsInJvbCI6IlJPTEVfUkVHSVNURVIiLCJpc3MiOiJPcGVuWExhYiIsImlhdCI6MTcyNDEyMjk3MCwiY2xpZW50SWQiOiJtcXprcGxtbnc5N29wa28zNmpxaiIsInBob25lIjoiIiwidXVpZCI6IjYzNTgxOTg0LTUzYjctNDAwMS1hYzJlLTBmOTFlMTc3ZDFkYyIsImVtYWlsIjoidmluY2lAcGpsYWIub3JnLmNuIiwiZXhwIjoxODgxODAyOTcwfQ.E01dyrnLZZgaPTD9dtrtXtnl_wkXYb3BHbaHQYnjN89RkdP88r7FY7VxeszW9ujk-913XurIc2e9ngbZCFbh2w
+    ports:
+      - '18000:8000'
+    privileged: true
+    networks:
+      - vinci_local
+
+  vinci-fe:
+    image: crpi-dn1nyq7vw8amhh61.cn-shanghai.personal.cr.aliyuncs.com/vinci-dl/vinci-fe:latest
+    container_name: vinci-fe
+    restart: always
+    ports:
+      - '19330:80'
+    privileged: true
+    networks:
+      - vinci_local
+
+networks:
+  vinci_local:
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.28.0.0/16
+        gateway: 172.28.0.1
