@@ -46,7 +46,8 @@ if not osp.exists(video_save_dir):
 
 def upload_video(video_path: str='vid.mp4', object_name = 'vinci/vid.mp4'):
     # save_video(frames, video_path, fps=fps, h_256=h_256)
-    oss_client.put_object_from_file(object_name, video_path)
+    # oss_client.put_object_from_file(object_name, video_path)
+    oss_client.upload_local_file_then_remove('', video_path, object_name)
 
     return oss_client.sign_url(object_name, cdn=True)
 
