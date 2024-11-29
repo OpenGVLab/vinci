@@ -7,11 +7,6 @@ from urllib.parse import urljoin, urlparse, urlunparse
 from minio import Minio
 from minio.error import S3Error
 
-sys.path.append("..")
-
-from app.util.log import logger
-from app.config import app_config as c
-
 
 class OssClient:
     def __init__(self, access_key, access_key_secret, 
