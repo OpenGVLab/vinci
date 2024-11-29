@@ -13,7 +13,6 @@ class OssClient:
                            endpoint,
                            bucket,
                            cdn):
-        self.config = config
 
         self.access_key_id = access_key
         self.access_key_secret= access_key_secret
