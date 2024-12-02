@@ -160,7 +160,7 @@ class Chat:
             def merge_dicts(dict1, dict2, dict3, dict4):
                 result = {**dict1, **dict2, **dict3, **dict4}
                 return result
-            path2 = '/mnt/hwfile/internvideo/share_data/peibaoqi/8B_ckpt/ckptv2'
+            path2 = 'Vinci-8B-ckpt'
             model_weights1 = load_file(os.path.join(path2,"model-00001-of-00004.safetensors"))
             model_weights2 = load_file(os.path.join(path2,"model-00002-of-00004.safetensors"))
             model_weights3 = load_file(os.path.join(path2,"model-00003-of-00004.safetensors"))
