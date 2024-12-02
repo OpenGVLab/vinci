@@ -138,11 +138,7 @@ def get_prompt(conv):
     return ret
 
 class Chat:
-    def __init__(self, path='Vinci-8B-base', sep_chat=False, stream=True, device='cuda:0', use_chat_history=False, language='chn', version='v0'):
-        # 这里的path目前只有三种选择,首选第一个,不需要考虑剩下的. sep_chat是两种模型运行模式.
-        # path = '/mnt/hwfile/internvideo/share_data/peibaoqi/InternVL2-8B'
-        # path = None
-        # path = '/mnt/hwfile/internvideo/share_data/peibaoqi/InternVL2-2B'
+    def __init__(self, path='Vinci-8B-base', stream=True, device='cuda:0', use_chat_history=False, language='chn', version='v0'):
         self.device = device
         self.vr = None
         self.video_fps = None
@@ -237,50 +233,21 @@ class Chat:
             self.history.append((timestamp, response))
             print('VL_HISTORY:', self.history)
         else:
-            if self.sep_chat:
-                if self.language == 'chn':
-                    quest = video_prefix + '现在视频到了 %.1f 秒处. 描述视频中我的动作.' % timestamp
-                else:
-                    quest = video_prefix + 'Now the video is at %.1f second. Describe my action in the video.' % timestamp 
-                
-                response, history = self.model.chat(self.tokenizer, pixel_values, quest, self.generation_config,
+            self.chat_history.append([conv['questions'][-1]])
+            question = self.add_history(conv['questions'][-1])
+            question = video_prefix + question
+            if self.stream:
+                thread = Thread(target=self.model.chat, kwargs=dict(tokenizer=self.tokenizer, pixel_values=pixel_values, question=question, generation_config=self.generation_config,
                                 num_patches_list=num_patches_list,
-                                history=None, return_history=True)
-                self.history.append((timestamp, response))
-
-                self.chat_history[-1].append(timestamp)
-                self.chat_history.append([conv['questions'][-1]])
-                question = self.add_history(conv['questions'][-1])
-                question = question
-                if self.stream:
-                    thread = Thread(target=self.lmmodel.chat, kwargs=dict(tokenizer=self.tokenizer, pixel_values=None, question=question, generation_config=self.lmgeneration_config,
-                                    num_patches_list=num_patches_list,
-                                    history=None, return_history=False))
-                    thread.start()
-                    response = ''
-                
-                else:
-                    response = self.model.chat(self.tokenizer, None, question, self.generation_config,
-                                num_patches_list=num_patches_list,
-                                history=None, return_history=False)
-                    self.chat_history[-1].append(timestamp)
-                    self.chat_history[-1].append(response)
+                                history=None, return_history=False))
+                thread.start()
+                response = ''
             else:
-                self.chat_history.append([conv['questions'][-1]])
-                question = self.add_history(conv['questions'][-1])
-                question = video_prefix + question
-                if self.stream:
-                    thread = Thread(target=self.model.chat, kwargs=dict(tokenizer=self.tokenizer, pixel_values=pixel_values, question=question, generation_config=self.generation_config,
-                                    num_patches_list=num_patches_list,
-                                    history=None, return_history=False))
-                    thread.start()
-                    response = ''
-                else:
-                    response = self.model.chat(self.tokenizer, pixel_values, question, self.generation_config,
-                                num_patches_list=num_patches_list,
-                                history=None, return_history=False)
-                    self.chat_history[-1].append(timestamp)
-                    self.chat_history[-1].append(response)
+                response = self.model.chat(self.tokenizer, pixel_values, question, self.generation_config,
+                            num_patches_list=num_patches_list,
+                            history=None, return_history=False)
+                self.chat_history[-1].append(timestamp)
+                self.chat_history[-1].append(response)
                 # self.history.append((timestamp, response))
         conv['answers'].append(response + '\n')
         # print('Real question at %.1f is |||' % timestamp, question)
@@ -298,32 +265,17 @@ class Chat:
             else:
                 system = 'You are an intelligent assistant on AR glasses. The AR glasses receive video frames from my egocentric viewpoint. Carefully watch the video and pay attention to the movement of objects, and the action of human. Since you cannot see the previous part of the video, I provide you the history of this video for reference. The history is: '
             res = system
-            if self.sep_chat:
-                for hist in self.history[:-1]:
-                    ts = hist[0]
-                    a = hist[1]
-                    if self.language == 'chn':
-                        res += '当视频在%.1f秒时, 视频的内容是 "%s"' % (ts, a)
-                    else:
-                        res += 'When the video is at %.1f seconds, the video content is "%s". ' % (ts, a)
-                ts = self.history[-1][0]
-                a = self.history[-1][1]
+            for hist in self.history:
+                ts = hist[0]
+                a = hist[1]
                 if self.language == 'chn':
-                    res += '以上是所有的视频历史, 表明了之前发生了什么.\n现在视频到了 %.1f秒, 视频的内容是 "%s". ' % (ts, a)
+                    res += '当视频在%.1f秒时, 视频的内容是 "%s". ' % (ts, a.strip())
                 else:
-                    res += 'This is the end of the history which indicate what have previously happened.\n Now the video is at %.1f seconds, the video content is: "%s". ' % (ts, a)
+                    res += 'When the video is at %.1f seconds, the video contect is "%s". ' % (ts, a.strip())
+            if self.language == 'chn':
+                res += '以上是所有的视频历史, 表明了之前发生了什么.\n'
             else:
-                for hist in self.history:
-                    ts = hist[0]
-                    a = hist[1]
-                    if self.language == 'chn':
-                        res += '当视频在%.1f秒时, 视频的内容是 "%s". ' % (ts, a.strip())
-                    else:
-                        res += 'When the video is at %.1f seconds, the video contect is "%s". ' % (ts, a.strip())
-                if self.language == 'chn':
-                    res += '以上是所有的视频历史, 表明了之前发生了什么.\n'
-                else:
-                    res += 'This is the end of the video history that indicates what happened before.\n'
+                res += 'This is the end of the video history that indicates what happened before.\n'
             if self.use_chat_history and len(self.chat_history)>1:
                 if self.language == 'chn':
                     res += '另外我提供根据之前的视频,我们的对话历史如下: '
