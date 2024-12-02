@@ -119,7 +119,7 @@ def dynamic_preprocess(image, min_num=1, max_num=6, image_size=448, use_thumbnai
 
 
 class Chat:
-    def __init__(self, path='Vinci-8B-base', stream=True, device='cuda:0', use_chat_history=False, language='chn', version='v1'):
+    def __init__(self, path='Vinci-8B-base', stream=True, device='cuda:0', use_chat_history=False, language='chn', version='v1', max_history=10):
         self.device = device
         self.vr = None
         self.video_fps = None
@@ -131,6 +131,7 @@ class Chat:
         self.transform = build_transform(input_size=448)
         self.language = language
         self.version = version
+        self.max_history = max_history
         self.model = AutoModel.from_pretrained(
                 path,
                 torch_dtype=torch.bfloat16,
@@ -283,6 +284,8 @@ class Chat:
                 res += 'Given the current video and using the previous video as reference, answer my question in English: "%s". Note that if the question is about what has been previously done, please only focus on the history. Otherwise, please only focus on the question and the current video input. If the question is about future planning, provide at most 3 steps.' % question
             # question = res + '\n' + question
             question = res
+        if len(self.history) > self.max_history:
+            self.history = self.history[-self.max_history:]
         return question
 
     def upload_video(self, video_path):
