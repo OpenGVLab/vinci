@@ -198,7 +198,7 @@ class Chat:
         return conv
 
     def answer(self, conv, timestamp=0, add_to_history=False):
-        with self.model_lock():
+        with self.model_lock:
             pixel_values, num_patches_list = self.load_video_timestamp(timestamp)
             pixel_values = pixel_values.to(torch.bfloat16).cuda()
             video_prefix = ''.join([f'Frame{i+1}: <image>\n' for i in range(len(num_patches_list))])
