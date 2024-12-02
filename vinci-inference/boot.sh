@@ -16,8 +16,9 @@ fi
 CONDA_ENV=vinci
 
 # 默认的 CUDA 设备
-DEFAULT_CUDA_VISIBLE_DEVICES="2,3"
+DEFAULT_CUDA_VISIBLE_DEVICES="0"
 DEFAULT_RUNNING_LANGUAGE='chn'
+DEFAULT_VERSION="v1"
 
 # Python 启动命令
 COMMAND="python vinci-inference/app/main.py"
@@ -31,6 +32,7 @@ mkdir -p "$(dirname "$PID_FILE")"
 start_service() {
     export CUDA_VISIBLE_DEVICES=$1
     export RUNNING_LANGUAGE=$2
+    export VERSION=$3
 
     echo "Activating conda environment: $CONDA_ENV"
     source $(conda info --base)/etc/profile.d/conda.sh
@@ -66,10 +68,12 @@ restart_service() {
 # 主逻辑
 CUDA_VISIBLE_DEVICES=$DEFAULT_CUDA_VISIBLE_DEVICES
 RUNNING_LANGUAGE=$DEFAULT_RUNNING_LANGUAGE
+VERSION=$DEFAULT_VERSION
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --cuda) CUDA_VISIBLE_DEVICES="$2"; shift ;;
+        --version) VERSION="$2"; shift ;;
         --language) RUNNING_LANGUAGE="$2"; shift ;;
         start) COMMAND_ACTION="start" ;;
         stop) COMMAND_ACTION="stop" ;;
@@ -81,16 +85,16 @@ done
 
 case "$COMMAND_ACTION" in
     start)
-        start_service $CUDA_VISIBLE_DEVICES $RUNNING_LANGUAGE
+        start_service $CUDA_VISIBLE_DEVICES $RUNNING_LANGUAGE $VERSION
         ;;
     stop)
         stop_service
         ;;
     restart)
-        restart_service $CUDA_VISIBLE_DEVICES $RUNNING_LANGUAGE
+        restart_service $CUDA_VISIBLE_DEVICES $RUNNING_LANGUAGE $VERSION
         ;;
     *)
-        echo "Usage: $0 {start|stop|restart} [--cuda <CUDA_VISIBLE_DEVICES>] [--language chn/eng]"
+        echo "Usage: $0 {start|stop|restart} [--cuda <CUDA_VISIBLE_DEVICES>] [--language chn/eng] [--version v0/v1]"
         exit 1
         ;;
 esac

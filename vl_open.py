@@ -89,7 +89,7 @@ def load_image(image_file, input_size=448, max_num=6):
 
 
 class Chat():
-    def __init__(self, path='Vinci-8B-base', path2='Vinci-8B-ckpt', sep_chat=False, stream=True, device='cuda:0', use_chat_history=False, language='chn'):
+    def __init__(self, path='Vinci-8B-base', path2='Vinci-8B-ckpt', sep_chat=False, stream=True, device='cuda:0', use_chat_history=False, language='chn', version='v0'):
         super().__init__()
         self.device = device
         self.vr = None
@@ -108,18 +108,19 @@ class Chat():
             result = {**dict1, **dict2, **dict3, **dict4}
             return result
 
-        model_weights1 = load_file(os.path.join(path2,"model-00001-of-00004.safetensors"))
-        model_weights2 = load_file(os.path.join(path2,"model-00002-of-00004.safetensors"))
-        model_weights3 = load_file(os.path.join(path2,"model-00003-of-00004.safetensors"))
-        model_weights4 = load_file(os.path.join(path2,"model-00004-of-00004.safetensors"))
-        merged_weight = merge_dicts(model_weights1,model_weights2,model_weights3,model_weights4)
         self.model = AutoModel.from_pretrained(
             path,
             torch_dtype=torch.bfloat16,
             low_cpu_mem_usage=True,
             trust_remote_code=True)
-        self.model.wrap_llm_lora(r=16, lora_alpha=2 * 16)
-        msg = self.model.load_state_dict(merged_weight,strict=False)
+        if 'version' == 'v0':
+            model_weights1 = load_file(os.path.join(path2,"model-00001-of-00004.safetensors"))
+            model_weights2 = load_file(os.path.join(path2,"model-00002-of-00004.safetensors"))
+            model_weights3 = load_file(os.path.join(path2,"model-00003-of-00004.safetensors"))
+            model_weights4 = load_file(os.path.join(path2,"model-00004-of-00004.safetensors"))
+            merged_weight = merge_dicts(model_weights1,model_weights2,model_weights3,model_weights4)
+            self.model.wrap_llm_lora(r=16, lora_alpha=2 * 16)
+            msg = self.model.load_state_dict(merged_weight,strict=False)
 
         self.model = self.model.eval().cuda()
         state1 = self.model.state_dict()
@@ -176,7 +177,6 @@ class Chat():
                                num_patches_list=num_patches_list,
                                history=None, return_history=True)
             self.history.append((timestamp, response))
-            print('VL_HISTORY:', self.history)
         else:
             if True:
                 self.chat_history.append([conv['questions'][-1]])

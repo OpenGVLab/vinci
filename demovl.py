@@ -87,7 +87,6 @@ def gradio_answer(chatbot, chat_state, gr_video_time):
 def silent_ask(user_message, chat_state, gr_video_time):
     # user_message = 'Now the video is at %.1f second. What am I doing?' % gr_video_time
     user_message = '现在视频到了%.1f秒处. 描述当前视频中我的动作.' % gr_video_time
-    print('silent gr_video_time:', gr_video_time)
     chat_state =  chat.ask(user_message, chat_state)
     # chatbot = chatbot + [[f'User@{gr_video_time}s: '+user_message, None]]
     return '', chat_state
@@ -95,8 +94,6 @@ def silent_ask(user_message, chat_state, gr_video_time):
 def silent_answer(chat_state, gr_video_time):
     llm_message, chat_state, last_img_list = chat.answer(chat_state, timestamp=gr_video_time, add_to_history=True)
     llm_message = llm_message.replace("<s>", "") # handle <s>
-    # print(chat_state)
-    print(f"Silent Answer: {llm_message}")
     return chat_state
 
 
@@ -221,7 +218,6 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
         return 0, gr.update(active=True) 
     
     def timertick(up_video, gr_video_time, silent_time, text_input, chat_state):
-        print('timer tick', gr_video_time, 'silent time', silent_time)
         if gr_video_time - silent_time < 10:
             return silent_time, chat_state, gr_video_time
         silent_time = gr_video_time
@@ -232,10 +228,7 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
     up_video.play(video_change_init_time, [], [gr_video_time, gr_timer])
 
     def generate_video(img, conv, gr_video_time):
-        print('current time:', gr_video_time)
-        print(conv)
         text = conv["answers"][-1]
-        print('generate using', text)
         omega_conf.input_path = './lastim.jpg'
         omega_conf.text_prompt = [text]
         gen(omega_conf, model_seine)

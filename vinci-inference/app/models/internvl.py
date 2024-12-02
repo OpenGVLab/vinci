@@ -15,10 +15,10 @@ from global_var import FIFOSafeCache
 history_cache = FIFOSafeCache(capacity=1000)
 first_chat_timestamp_cache = FIFOSafeCache(capacity=1000)
 
-def init_model(sep_chat: False, stream: bool=False, device: str='cuda:0', language: str='chn'):
+def init_model(sep_chat: False, stream: bool=False, device: str='cuda:0', language: str='chn', version: str='v1'):
     print(f'Initializing VLChat, sep_chat: {sep_chat}, stream: {stream}, device: {device}')
     with torch.device(device):
-        chat = Chat(sep_chat=sep_chat, stream=stream, language=language)
+        chat = Chat(sep_chat=sep_chat, stream=stream, language=language, version=version)
         print('Initialization Finished')
         return chat
 
@@ -72,12 +72,13 @@ def add_history(question, history, sep_chat: bool=False, language: str='chn'):
 class IntervlChat():
 
     def __init__(self, sep_chat: bool=False, stream: bool=False, 
-                 device: str='cuda:0', language: str='chn'):
+                 device: str='cuda:0', language: str='chn', version: str='v1'):
         self.sep_chat = sep_chat
         self.language = language
         self.device = device
         self.stream = stream
-        self.intervl_chat = init_model(sep_chat, stream=self.stream, device=device, language=language)
+        self.version = version
+        self.intervl_chat = init_model(sep_chat, stream=self.stream, device=device, language=language, version=version)
         self.origin_intervl_model = self.intervl_chat.model
 
     # frame是否可以resize
@@ -239,9 +240,10 @@ print(f"availabel devices: {available_devices}")
 sep_chat = False
 stream = True
 running_language = os.environ.get('RUNNING_LANGUAGE')
+version = os.environ.get('VERSION')
 if running_language is None:
     running_language = 'chn'
-chats = [IntervlChat(sep_chat, stream, device, running_language) for device in available_devices]
+chats = [IntervlChat(sep_chat, stream, device, running_language, version) for device in available_devices]
 
 def get_timestamp(session_id: str):
     current_timestamp = time.time()
