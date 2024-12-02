@@ -9,7 +9,7 @@ from vl_open import Chat
 import sys
 sys.path.append('generation/seine-v2/')
 # torchvision.set_video_backend('video_reader')
-from generation.seine import gen, model_seine
+from seine import gen, model_seine
 from omegaconf import OmegaConf
 omega_conf = OmegaConf.load('seine-v2/configs/demo.yaml')
 omega_conf.run_time = 13
