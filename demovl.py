@@ -138,7 +138,7 @@ def get_prompt(conv):
     return ret
 
 class Chat:
-    def __init__(self, path='Vinci-8B-Base', sep_chat=False, stream=True, device='cuda:0', use_chat_history=False, language='chn', version='v0'):
+    def __init__(self, path='Vinci-8B-base', sep_chat=False, stream=True, device='cuda:0', use_chat_history=False, language='chn', version='v0'):
         # 这里的path目前只有三种选择,首选第一个,不需要考虑剩下的. sep_chat是两种模型运行模式.
         # path = '/mnt/hwfile/internvideo/share_data/peibaoqi/InternVL2-8B'
         # path = None
