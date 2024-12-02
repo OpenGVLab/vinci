@@ -150,6 +150,11 @@ class Chat:
         self.transform = build_transform(input_size=448)
         self.language = language
         self.version = version
+        self.model = AutoModel.from_pretrained(
+                path,
+                torch_dtype=torch.bfloat16,
+                low_cpu_mem_usage=True,
+                trust_remote_code=True)
 
         if version == 'v0':
             from safetensors.torch import load_file
@@ -162,11 +167,6 @@ class Chat:
             model_weights3 = load_file(os.path.join(path2,"model-00003-of-00004.safetensors"))
             model_weights4 = load_file(os.path.join(path2,"model-00004-of-00004.safetensors"))
             merged_weight = merge_dicts(model_weights1,model_weights2,model_weights3,model_weights4)
-            self.model = AutoModel.from_pretrained(
-                path,
-                torch_dtype=torch.bfloat16,
-                low_cpu_mem_usage=True,
-                trust_remote_code=True)
             self.model.wrap_llm_lora(r=16, lora_alpha=2 * 16)
             msg = self.model.load_state_dict(merged_weight,strict=False)
             print(msg)
@@ -425,7 +425,7 @@ gvlabtheme = OpenGVLab(primary_hue=colors.blue,
         text_size=sizes.text_md,
         )
 
-title = """<h1 align="center">Demo </h1>"""
+title = """<h1 align="center">Vinci</h1>"""
 description ="""
         Work?
         """
