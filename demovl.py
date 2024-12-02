@@ -3,6 +3,7 @@ torch.backends.cudnn.enabled = False
 import gradio as gr
 from gradio.themes.utils import colors, fonts, sizes
 import os, subprocess
+import threading
 
 #generation module
 import sys
@@ -117,28 +118,8 @@ def dynamic_preprocess(image, min_num=1, max_num=6, image_size=448, use_thumbnai
     return processed_images
 
 
-def load_image(image_file, input_size=448, max_num=6):
-    image = Image.open(image_file).convert('RGB')
-    transform = build_transform(input_size=input_size)
-    images = dynamic_preprocess(image, image_size=input_size, use_thumbnail=True, max_num=max_num)
-    pixel_values = [transform(image) for image in images]
-    pixel_values = torch.stack(pixel_values)
-    return pixel_values
-
-def get_prompt(conv):
-    ret = conv.system + conv.sep
-    msglen = len(conv.messages)
-    for i, (role, message) in enumerate(conv.messages):
-        if message:
-            if i == msglen - 1 and msglen > 2:
-                message += ' Use the chat history as cue, based on the latest video timestamp, response to only the latest user request.'
-            ret += role + ": " + message + conv.sep
-        else:
-            ret += role + ":"
-    return ret
-
 class Chat:
-    def __init__(self, path='Vinci-8B-base', stream=True, device='cuda:0', use_chat_history=False, language='chn', version='v0'):
+    def __init__(self, path='Vinci-8B-base', stream=True, device='cuda:0', use_chat_history=False, language='chn', version='v1'):
         self.device = device
         self.vr = None
         self.video_fps = None
@@ -155,6 +136,7 @@ class Chat:
                 torch_dtype=torch.bfloat16,
                 low_cpu_mem_usage=True,
                 trust_remote_code=True)
+        self.model_lock = threading.Lock()
 
         if version == 'v0':
             from safetensors.torch import load_file
@@ -216,44 +198,43 @@ class Chat:
         return conv
 
     def answer(self, conv, timestamp=0, add_to_history=False):
-        # fixed_history = [('You are an intelligent assistant on AR glasses. The AR glasses receive video frames from my egocentric viewpoint. Carefully watch the video and pay attention to the movement of objects, and the action of human. Based on your observations, answer my question. Since you cannot see the previous part of the video, here are the previous history of this video. This history shows what I have previously done, but this is not what the video is currently showing, so do not directly repeat the answer in the history. Do you understand?',
-                        #    'Yes. Please provide me with the video and question.')]
-        pixel_values, num_patches_list = self.load_video_timestamp(timestamp)
-        pixel_values = pixel_values.to(torch.bfloat16).cuda()
-        video_prefix = ''.join([f'Frame{i+1}: <image>\n' for i in range(len(num_patches_list))])
-        if add_to_history: # silent ask
-            if self.language == 'chn':
-                question = video_prefix + '现在视频到了 %.1f 秒处. 简单的描述视频中我的动作.' % timestamp
+        with self.model_lock():
+            pixel_values, num_patches_list = self.load_video_timestamp(timestamp)
+            pixel_values = pixel_values.to(torch.bfloat16).cuda()
+            video_prefix = ''.join([f'Frame{i+1}: <image>\n' for i in range(len(num_patches_list))])
+            if add_to_history: # silent ask
+                if self.language == 'chn':
+                    question = video_prefix + '现在视频到了 %.1f 秒处. 简单的描述视频中我的动作.' % timestamp
+                else:
+                    question = video_prefix + 'Now the video is at %.1f second. Briefly describe my actions in the video.' % timestamp #conv['questions'][-1]
+                
+                response, history = self.model.chat(self.tokenizer, pixel_values, question, self.generation_config,
+                                   num_patches_list=num_patches_list,
+                                   history=None, return_history=True)
+                self.history.append((timestamp, response))
+                print('VL_HISTORY:', self.history)
             else:
-                question = video_prefix + 'Now the video is at %.1f second. Briefly describe my actions in the video.' % timestamp #conv['questions'][-1]
-            
-            response, history = self.model.chat(self.tokenizer, pixel_values, question, self.generation_config,
-                               num_patches_list=num_patches_list,
-                               history=None, return_history=True)
-            self.history.append((timestamp, response))
-            print('VL_HISTORY:', self.history)
-        else:
-            self.chat_history.append([conv['questions'][-1]])
-            question = self.add_history(conv['questions'][-1])
-            question = video_prefix + question
-            if self.stream:
-                thread = Thread(target=self.model.chat, kwargs=dict(tokenizer=self.tokenizer, pixel_values=pixel_values, question=question, generation_config=self.generation_config,
+                self.chat_history.append([conv['questions'][-1]])
+                question = self.add_history(conv['questions'][-1])
+                question = video_prefix + question
+                if self.stream:
+                    thread = Thread(target=self.model.chat, kwargs=dict(tokenizer=self.tokenizer, pixel_values=pixel_values, question=question, generation_config=self.generation_config,
+                                    num_patches_list=num_patches_list,
+                                    history=None, return_history=False))
+                    thread.start()
+                    response = ''
+                else:
+                    response = self.model.chat(self.tokenizer, pixel_values, question, self.generation_config,
                                 num_patches_list=num_patches_list,
-                                history=None, return_history=False))
-                thread.start()
-                response = ''
-            else:
-                response = self.model.chat(self.tokenizer, pixel_values, question, self.generation_config,
-                            num_patches_list=num_patches_list,
-                            history=None, return_history=False)
-                self.chat_history[-1].append(timestamp)
-                self.chat_history[-1].append(response)
-                # self.history.append((timestamp, response))
-        conv['answers'].append(response + '\n')
-        # print('Real question at %.1f is |||' % timestamp, question)
-        # print('Answer at %.1f is ||| '%timestamp, response)
-        # print('the history is:', self.history)
-        return response, conv, './lastim.jpg'
+                                history=None, return_history=False)
+                    self.chat_history[-1].append(timestamp)
+                    self.chat_history[-1].append(response)
+                    # self.history.append((timestamp, response))
+            conv['answers'].append(response + '\n')
+            # print('Real question at %.1f is |||' % timestamp, question)
+            # print('Answer at %.1f is ||| '%timestamp, response)
+            # print('the history is:', self.history)
+            return response, conv, './lastim.jpg'
 
     def add_history(self, question):
         if not self.history:
@@ -261,9 +242,9 @@ class Chat:
             return question
         if len(self.history) > 0:
             if self.language == 'chn':
-                system = "你是一个视频助手。仔细观察视频并重点关注物体的运动和我的动作。由于你看不到发生在当前帧之前的部分，现在以文字形式提供给你这个视频的之前的历史供参考："
+                system = "你是一个第一人称视频智能助手。仔细观察视频并重点关注物体的运动和我的动作。由于你看不到发生在当前帧之前的部分，现在以文字形式提供给你这个视频的之前的历史供参考："
             else:
-                system = 'You are an intelligent assistant on AR glasses. The AR glasses receive video frames from my egocentric viewpoint. Carefully watch the video and pay attention to the movement of objects, and the action of human. Since you cannot see the previous part of the video, I provide you the history of this video for reference. The history is: '
+                system = 'You are an intelligent assistant. You receive video frames from my egocentric viewpoint. Carefully watch the video and pay attention to the movement of objects, and the action of human. Since you cannot see the previous part of the video, I provide you the history of this video for reference. The history is: '
             res = system
             for hist in self.history:
                 ts = hist[0]
