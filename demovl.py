@@ -11,7 +11,7 @@ sys.path.append('generation/seine-v2/')
 # torchvision.set_video_backend('video_reader')
 from seine import gen, model_seine
 from omegaconf import OmegaConf
-omega_conf = OmegaConf.load('seine-v2/configs/demo.yaml')
+omega_conf = OmegaConf.load('generation/seine-v2/configs/demo.yaml')
 omega_conf.run_time = 13
 omega_conf.input_path = ''
 omega_conf.text_prompt = []
