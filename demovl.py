@@ -17,6 +17,14 @@ omega_conf.input_path = ''
 omega_conf.text_prompt = []
 omega_conf.save_img_path = '.'
 
+import argparse
+
+# Create ArgumentParser object
+parser = argparse.ArgumentParser(description='Argument Parser Example')
+parser.add_argument('--version', type=str, help='v0 or v1', default='v1')
+args = parser.parse_args()
+version = args.version
+
 
 get_gr_video_current_time = """async (video, grtime, one, two, three) => {
   const videoEl = document.querySelector("#up_video video");
@@ -32,7 +40,7 @@ get_time = """async (video, grtime, one, two, three) => {
 # ========================================
 def init_model():
     print('Initializing VLChat')
-    chat = Chat(stream=False)
+    chat = Chat(stream=False, version=args.version)
     print('Initialization Finished')
     return chat
 
