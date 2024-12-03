@@ -313,7 +313,7 @@ def gradio_reset(chat_state):
         chat_state.messages = []
     # if img_list is not None:
     #     img_list = []
-    return gr.update(value=None, interactive=True), gr.update(value=None, interactive=True), gr.update(placeholder='Please upload your video first', interactive=False),gr.update(value="Upload & Start Chat", interactive=True), chat_state
+    return gr.update(value=None, interactive=True), gr.update(value=None, interactive=True), gr.update(placeholder='Please upload your video first', interactive=False), gr.update(value="Upload & Start Chat", interactive=True), chat_state
 
 
 def upload_img(gr_video, chat_state, num_segments=4):
@@ -325,7 +325,7 @@ def upload_img(gr_video, chat_state, num_segments=4):
     # img_list = []
     if gr_video is None:
         return None, gr.update(interactive=True),gr.update(interactive=True, placeholder='Please upload video/image first!'), chat_state, 0.0
-    if gr_video: 
+    else: 
         llm_message = chat.upload_video(gr_video)
         return gr.update(interactive=True), gr.update(interactive=True, placeholder='Type and press Enter'), gr.update(value="Start Chatting", interactive=False), chat_state, 0.0
 
@@ -495,7 +495,7 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
         return gr.update(value=None), gr.update(value=None)
     generate_clear_button.click(generate_clear, [], [inimage_interface, outvideo_interface])
 
-    upload_button.click(upload_img, [up_video, chat_state], [up_video, text_input, upload_button, chat_state, gr_video_time])
+    upload_button.click(upload_img, [up_video, chat_state, 4], [up_video, text_input, upload_button, chat_state, gr_video_time])
     
     text_input.submit(gradio_ask, [up_video, gr_video_time, text_input, chatbot, chat_state], [text_input, chatbot, chat_state, gr_video_time], js=get_gr_video_current_time).then(
         gradio_answer, [chatbot, chat_state, gr_video_time], [chatbot, chat_state, last_img_list]
