@@ -447,8 +447,10 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
                 interactive=True,
                 label="stride of memory",
             )
-            print(memory_size)
-            print(memory_stride)
+            print(memory_size.value)
+            print(memory_stride.value)
+            print('..............1...............')
+
         
         with gr.Column(visible=True)  as input_raws:
             chat_state = gr.State()
@@ -485,6 +487,9 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
         _,  chat_state = silent_ask(text_input, chat_state, gr_video_time, memory_size.value)
         chat_state = silent_answer(chat_state, gr_video_time)
         return silent_time, chat_state, gr_video_time
+    print(memory_size.value)
+    print(memory_stride.value)
+    print('..............2...............')
     gr_timer.tick(timertick, [up_video, gr_video_time, silent_time, text_input, chat_state, memory_stride, memory_size], [silent_time, chat_state, gr_video_time], js=get_time)
     up_video.play(video_change_init_time, [], [gr_video_time, gr_timer])
 
