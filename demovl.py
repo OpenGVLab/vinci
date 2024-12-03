@@ -478,10 +478,10 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
         return 0, gr.update(active=True) 
     
     def timertick(up_video, gr_video_time, silent_time, text_input, chat_state, memory_stride, memory_size):
-        if gr_video_time - silent_time < memory_stride.value:
+        if gr_video_time - silent_time < memory_stride:
             return silent_time, chat_state, gr_video_time
         silent_time = gr_video_time
-        _,  chat_state = silent_ask(text_input, chat_state, gr_video_time, memory_size.value)
+        _,  chat_state = silent_ask(text_input, chat_state, gr_video_time, memory_size)
         chat_state = silent_answer(chat_state, gr_video_time)
         return silent_time, chat_state, gr_video_time
 
