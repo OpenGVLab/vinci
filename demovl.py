@@ -205,9 +205,9 @@ class Chat:
             video_prefix = ''.join([f'Frame{i+1}: <image>\n' for i in range(len(num_patches_list))])
             if add_to_history: # silent ask
                 if self.language == 'chn':
-                    question = video_prefix + '现在视频到了 %.1f 秒处. 简单的描述视频中我的动作.' % timestamp
+                    question = video_prefix + '现在视频到了 %.1f 秒处. 简单的用一句话描述视频中我的动作.' % timestamp
                 else:
-                    question = video_prefix + 'Now the video is at %.1f second. Briefly describe my actions in the video.' % timestamp #conv['questions'][-1]
+                    question = video_prefix + 'Now the video is at %.1f second. Briefly describe my actions in the video in one sentence.' % timestamp #conv['questions'][-1]
                 
                 response, history = self.model.chat(self.tokenizer, pixel_values, question, self.generation_config,
                                    num_patches_list=num_patches_list,
@@ -423,10 +423,7 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
     with gr.Row():
         with gr.Column(scale=0.5, visible=True) as video_upload:
             with gr.Column(elem_id="image", scale=0.5) as img_part:
-                with gr.Tab("Video", elem_id='video_tab'):
-                    up_video = gr.Video(interactive=True, elem_id="up_video", height=360)
-                with gr.Tab("Image", elem_id='image_tab'):
-                    up_image = gr.Image(type="pil", interactive=True, elem_id="image_upload", height=360)
+                up_video = gr.Video(interactive=True, elem_id="up_video", height=360)
             upload_button = gr.Button(value="Upload & Start Chat", interactive=True, variant="primary")
             clear = gr.Button("Restart")
             
