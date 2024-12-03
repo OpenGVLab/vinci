@@ -316,7 +316,7 @@ def gradio_reset(chat_state):
     return None, gr.update(value=None, interactive=True), gr.update(value=None, interactive=True), gr.update(placeholder='Please upload your video first', interactive=False),gr.update(value="Upload & Start Chat", interactive=True), chat_state
 
 
-def upload_img(gr_img, gr_video, chat_state, num_segments):
+def upload_img(gr_img, gr_video, chat_state, num_segments=4):
     print('gr_img:', gr_img, '. gr_video:', gr_video)
     chat_state = {
         "questions": [],
@@ -352,7 +352,8 @@ def gradio_answer(chatbot, chat_state, gr_video_time):
     print(f"Answer: {llm_message}")
     return chatbot, chat_state, last_img_list
 
-def silent_ask(user_message, chat_state, gr_video_time):
+def silent_ask(user_message, chat_state, gr_video_time, memory_size):
+    chat.max_history = memory_size
     # user_message = 'Now the video is at %.1f second. What am I doing?' % gr_video_time
     user_message = '现在视频到了%.1f秒处. 描述当前视频中我的动作.' % gr_video_time
     chat_state =  chat.ask(user_message, chat_state)
@@ -430,31 +431,22 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
             upload_button = gr.Button(value="Upload & Start Chat", interactive=True, variant="primary")
             clear = gr.Button("Restart")
             
-            num_beams = gr.Slider(
-                minimum=1,
-                maximum=10,
-                value=1,
+            memory_size = gr.Slider(
+                minimum=5,
+                maximum=25,
+                value=10,
                 step=1,
                 interactive=True,
-                label="beam search numbers)",
+                label="size of memory)",
             )
             
-            temperature = gr.Slider(
-                minimum=0.1,
-                maximum=2.0,
-                value=1.0,
-                step=0.1,
-                interactive=True,
-                label="Temperature",
-            )
-            
-            num_segments = gr.Slider(
-                minimum=8,
-                maximum=64,
-                value=8,
+            memory_stride = gr.Slider(
+                minimum=5,
+                maximum=100,
+                value=10,
                 step=1,
                 interactive=True,
-                label="Video Segments",
+                label="stride of memory",
             )
         
         with gr.Column(visible=True)  as input_raws:
@@ -485,14 +477,14 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
     def video_change_init_time():
         return 0, gr.update(active=True) 
     
-    def timertick(up_video, gr_video_time, silent_time, text_input, chat_state):
+    def timertick(up_video, gr_video_time, silent_time, text_input, chat_state, memory_stride, memory_size):
         if gr_video_time - silent_time < 10:
             return silent_time, chat_state, gr_video_time
         silent_time = gr_video_time
-        _,  chat_state = silent_ask(text_input, chat_state, gr_video_time)
+        _,  chat_state = silent_ask(text_input, chat_state, gr_video_time, memory_size)
         chat_state = silent_answer(chat_state, gr_video_time)
         return silent_time, chat_state, gr_video_time
-    gr_timer.tick(timertick, [up_video, gr_video_time, silent_time, text_input, chat_state], [silent_time, chat_state, gr_video_time], js=get_time)
+    gr_timer.tick(timertick, [up_video, gr_video_time, silent_time, text_input, chat_state, memory_stride, memory_size], [silent_time, chat_state, gr_video_time], js=get_time)
     up_video.play(video_change_init_time, [], [gr_video_time, gr_timer])
 
     def generate_video(img, conv, gr_video_time):
@@ -508,7 +500,7 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
         return gr.update(value=None), gr.update(value=None)
     generate_clear_button.click(generate_clear, [], [inimage_interface, outvideo_interface])
 
-    upload_button.click(upload_img, [up_image, up_video, chat_state, num_segments], [up_image, up_video, text_input, upload_button, chat_state, gr_video_time])
+    upload_button.click(upload_img, [up_image, up_video, chat_state], [up_image, up_video, text_input, upload_button, chat_state, gr_video_time])
     
     text_input.submit(gradio_ask, [up_video, gr_video_time, text_input, chatbot, chat_state], [text_input, chatbot, chat_state, gr_video_time], js=get_gr_video_current_time).then(
         gradio_answer, [chatbot, chat_state, gr_video_time], [chatbot, chat_state, last_img_list]
