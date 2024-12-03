@@ -243,7 +243,7 @@ class Chat:
             return question
         if len(self.history) > 0:
             if self.language == 'chn':
-                system = "你是一个第一人称视频智能助手。仔细观察视频并重点关注物体的运动和我的动作。由于你看不到发生在当前帧之前的部分，现在以文字形式提供给你这个视频的之前的历史供参考："
+                system = "你是一个视频智能助手。仔细观察我拍摄的视频并重点关注物体的运动和人的动作。由于你看不到发生在当前帧之前的部分，现在以文字形式提供给你这个视频的之前的历史供参考："
             else:
                 system = 'You are an intelligent assistant. You receive video frames from my egocentric viewpoint. Carefully watch the video and pay attention to the movement of objects, and the action of human. Since you cannot see the previous part of the video, I provide you the history of this video for reference. The history is: '
             res = system
@@ -279,9 +279,9 @@ class Chat:
             # res += 'Now the video is at %0.1fs, the action is "%s". ' % (ts, a)
             # res += 'Given the video information, please answer my question: '
             if self.language == 'chn':
-                res += '请根据当前视频, 同时参照视频历史, 用中文回答我的问题. 注意如果问题与之前发生的事情有关, 请参考视频历史, 否则请只关注当前图像信息. 我的问题是: "%s". 不要输出重复的话.' % question
+                res += '请根据当前视频, 同时参照视频历史, 用中文回答我的问题. 注意如果问题与之前发生的事情有关, 请参考视频历史, 否则请只关注当前图像信息. 我的问题是: "%s". 用三句话以内回答.' % question
             else:
-                res += 'Given the current video and using the previous video as reference, answer my question in English: "%s". Note that if the question is about what has been previously done, please only focus on the history. Otherwise, please only focus on the question and the current video input. If the question is about future planning, provide at most 3 steps.' % question
+                res += 'Given the current video and using the previous video as reference, answer my question in English: "%s". Note that if the question is about what has been previously done, please only focus on the history. Otherwise, please only focus on the question and the current video input. Do not repeat.' % question
             # question = res + '\n' + question
             question = res
         if len(self.history) > self.max_history:
@@ -421,7 +421,7 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
     with gr.Row():
         with gr.Column(scale=0.5, visible=True) as video_upload:
             with gr.Column(elem_id="image", scale=0.5) as img_part:
-                up_video = gr.Video(interactive=True, elem_id="up_video", height=360)
+                up_video = gr.Video(interactive=True, elem_id="up_video", height=360,)
             upload_button = gr.Button(value="Upload & Start Chat", interactive=True, variant="primary")
             clear = gr.Button("Restart")
             
