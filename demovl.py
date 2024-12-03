@@ -447,6 +447,8 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
                 interactive=True,
                 label="stride of memory",
             )
+            print(memory_size)
+            print(memory_stride)
         
         with gr.Column(visible=True)  as input_raws:
             chat_state = gr.State()
