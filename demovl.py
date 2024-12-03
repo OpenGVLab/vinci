@@ -410,7 +410,7 @@ gvlabtheme = OpenGVLab(primary_hue=colors.blue,
 
 title = """<h1 align="center">Vinci</h1>"""
 description ="""
-        Work?
+        An Egocentric Video Foundation Model based Online Intelligent Assistant
         """
 
 with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#chatbot {overflow:auto; height:500px;} #InputVideo {overflow:visible; height:320px;} footer {visibility: none}") as demo:
