@@ -498,7 +498,7 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
         return gr.update(value=None), gr.update(value=None)
     generate_clear_button.click(generate_clear, [], [inimage_interface, outvideo_interface])
 
-    upload_button.click(upload_img, [up_image, up_video, chat_state], [up_image, up_video, text_input, upload_button, chat_state, gr_video_time])
+    upload_button.click(upload_img, [None, up_video, chat_state], [None, up_video, text_input, upload_button, chat_state, gr_video_time])
     
     text_input.submit(gradio_ask, [up_video, gr_video_time, text_input, chatbot, chat_state], [text_input, chatbot, chat_state, gr_video_time], js=get_gr_video_current_time).then(
         gradio_answer, [chatbot, chat_state, gr_video_time], [chatbot, chat_state, last_img_list]
@@ -507,7 +507,7 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
         gradio_answer, [chatbot, chat_state, gr_video_time], [chatbot, chat_state, last_img_list]
     )
     run.click(lambda: "", None, text_input)  
-    clear.click(gradio_reset, [chat_state], [chatbot, up_image, up_video, text_input, upload_button, chat_state], queue=False)
+    clear.click(gradio_reset, [chat_state], [chatbot, None, up_video, text_input, upload_button, chat_state], queue=False)
 
 # demo.launch(share=True, enable_queue=True)
 demo.queue(default_concurrency_limit=10)
