@@ -324,10 +324,10 @@ def upload_img(gr_video, chat_state, num_segments=4):
     }
     # img_list = []
     if gr_video is None:
-        return None, None, gr.update(interactive=True),gr.update(interactive=True, placeholder='Please upload video/image first!'), chat_state, 0.0
+        return None, gr.update(interactive=True),gr.update(interactive=True, placeholder='Please upload video/image first!'), chat_state, 0.0
     if gr_video: 
         llm_message = chat.upload_video(gr_video)
-        return gr.update(interactive=True), gr.update(interactive=True), gr.update(interactive=True, placeholder='Type and press Enter'), gr.update(value="Start Chatting", interactive=False), chat_state, 0.0
+        return gr.update(interactive=True), gr.update(interactive=True, placeholder='Type and press Enter'), gr.update(value="Start Chatting", interactive=False), chat_state, 0.0
 
 
 def gradio_ask(up_video, gr_video_time, user_message, chatbot, chat_state):
