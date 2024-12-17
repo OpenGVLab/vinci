@@ -302,7 +302,7 @@ class Chat:
 # ========================================
 def init_model():
     print('Initializing VLChat')
-    chat = Chat(stream=False, version=args.version, language=args.running_language)
+    chat = Chat(stream=False, version=args.version, language=args.language)
     print('Initialization Finished')
     return chat
 
