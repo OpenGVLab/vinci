@@ -310,11 +310,11 @@ def init_model():
 # ========================================
 #             Gradio Setting
 # ========================================
-def gradio_reset(chat_state):
+def gradio_reset(chat_state, chat_model):
     if chat_state is not None:
         chat_state.messages = []
-    # if img_list is not None:
-    #     img_list = []
+    chat.history = []
+    chat.chat_history = []
     return gr.update(value=None, interactive=True), gr.update(value=None, interactive=True), gr.update(placeholder='Please upload your video first', interactive=False), gr.update(value="Upload & Start Chat", interactive=True), chat_state
 
 
@@ -507,7 +507,7 @@ with gr.Blocks(title="Vinci Demo",theme=gvlabtheme,css="#chatbot {overflow:auto;
         gradio_answer, [chatbot, chat_state, gr_video_time], [chatbot, chat_state, last_img_list]
     )
     run.click(lambda: "", None, text_input)  
-    clear.click(gradio_reset, [chat_state], [chatbot, up_video, text_input, upload_button, chat_state], queue=False)
+    clear.click(gradio_reset, [chat_state, chat], [chatbot, up_video, text_input, upload_button, chat_state], queue=False)
 
 # demo.launch(share=True, enable_queue=True)
 demo.queue(default_concurrency_limit=10)
