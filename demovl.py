@@ -22,8 +22,10 @@ import argparse
 # Create ArgumentParser object
 parser = argparse.ArgumentParser(description='Argument Parser Example')
 parser.add_argument('--version', type=str, help='v0 or v1', default='v1')
+parser.add_argument('--language', type=str, help='chn or eng', default='chn')
 args = parser.parse_args()
 version = args.version
+running_language = args.language
 
 
 get_gr_video_current_time = """async (video, grtime, one, two, three) => {
@@ -300,7 +302,7 @@ class Chat:
 # ========================================
 def init_model():
     print('Initializing VLChat')
-    chat = Chat(stream=False, version=args.version)
+    chat = Chat(stream=False, version=args.version, language=args.running_language)
     print('Initialization Finished')
     return chat
 
@@ -413,7 +415,7 @@ description ="""
         An Egocentric Video Foundation Model based Online Intelligent Assistant
         """
 
-with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#chatbot {overflow:auto; height:500px;} #InputVideo {overflow:visible; height:320px;} footer {visibility: none}") as demo:
+with gr.Blocks(title="Vinci Demo",theme=gvlabtheme,css="#chatbot {overflow:auto; height:500px;} #InputVideo {overflow:visible; height:320px;} footer {visibility: none}") as demo:
     gr.Markdown(title)
     gr.Markdown(description)
     gr_timer = gr.Timer(10, active=False)
@@ -431,7 +433,7 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
                 value=10,
                 step=1,
                 interactive=True,
-                label="size of memory)",
+                label="size of memory",
             )
             
             memory_stride = gr.Slider(
@@ -509,4 +511,4 @@ with gr.Blocks(title="EgoCentric Skill Assistant Demo",theme=gvlabtheme,css="#ch
 
 # demo.launch(share=True, enable_queue=True)
 demo.queue(default_concurrency_limit=10)
-demo.launch(server_name="0.0.0.0", server_port=10049, debug=True)
+demo.launch(server_name="0.0.0.0", server_port=10050, debug=True)

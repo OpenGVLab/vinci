@@ -11,7 +11,6 @@ else
     exit 1
 fi
 
-
 # Conda 环境名称
 CONDA_ENV=vinci
 
