@@ -305,17 +305,20 @@ def init_model():
     chat = Chat(stream=False, version=args.version, language=args.language)
     print('Initialization Finished')
     return chat
-
+chat = init_model()
 
 # ========================================
 #             Gradio Setting
 # ========================================
-def gradio_reset(chat_state, chat_model):
+def gradio_reset(chat_state):
     if chat_state is not None:
-        chat_state.messages = []
+        print(chat_state)
+        print(chat_state.keys())
+        chat_state['questions'] = []
+        chat_state['answers'] = []
     chat.history = []
     chat.chat_history = []
-    return gr.update(value=None, interactive=True), gr.update(value=None, interactive=True), gr.update(placeholder='Please upload your video first', interactive=False), gr.update(value="Upload & Start Chat", interactive=True), chat_state
+    return gr.update(value=None), gr.update(value=None), gr.update(placeholder='Please upload your video first'), gr.update(value="Upload & Start Chat"), chat_state
 
 
 def upload_img(gr_video, chat_state):
@@ -355,7 +358,7 @@ def gradio_answer(chatbot, chat_state, gr_video_time):
 def silent_ask(user_message, chat_state, gr_video_time, memory_size):
     chat.max_history = memory_size
     # user_message = 'Now the video is at %.1f second. What am I doing?' % gr_video_time
-    user_message = '现在视频到了%.1f秒处. 描述当前视频中我的动作.' % gr_video_time
+    user_message = '现在视频到了%.1f秒处. 描述当前视频中你在环境中所处的位置. 描述出物体的方位, 而不要仅仅描述有什么物体.' % gr_video_time
     chat_state =  chat.ask(user_message, chat_state)
     # chatbot = chatbot + [[f'User@{gr_video_time}s: '+user_message, None]]
     return '', chat_state
@@ -418,14 +421,14 @@ description ="""
 with gr.Blocks(title="Vinci Demo",theme=gvlabtheme,css="#chatbot {overflow:auto; height:500px;} #InputVideo {overflow:visible; height:320px;} footer {visibility: none}") as demo:
     gr.Markdown(title)
     gr.Markdown(description)
-    gr_timer = gr.Timer(10, active=False)
+    gr_timer = gr.Timer(5, active=False)
     silent_time = gr.Number(0.0, visible=False)
     with gr.Row():
         with gr.Column(scale=0.5, visible=True) as video_upload:
             with gr.Column(elem_id="image", scale=0.5) as img_part:
                 up_video = gr.Video(interactive=True, elem_id="up_video", height=360,)
             upload_button = gr.Button(value="Upload & Start Chat", interactive=True, variant="primary")
-            clear = gr.Button("Restart")
+            # clear = gr.Button("Restart")
             
             memory_size = gr.Slider(
                 minimum=5,
@@ -440,7 +443,7 @@ with gr.Blocks(title="Vinci Demo",theme=gvlabtheme,css="#chatbot {overflow:auto;
                 minimum=5,
                 maximum=100,
                 value=10,
-                step=1,
+                step=0.1,
                 interactive=True,
                 label="stride of memory",
             )
@@ -492,7 +495,7 @@ with gr.Blocks(title="Vinci Demo",theme=gvlabtheme,css="#chatbot {overflow:auto;
         gen(omega_conf, model_seine)
         return img, './result.mp4'
     generate_button.click(generate_video, [last_img_list, chat_state], [inimage_interface, outvideo_interface])
-    chat = init_model()
+    
 
     def generate_clear():
         return gr.update(value=None), gr.update(value=None)
@@ -507,7 +510,7 @@ with gr.Blocks(title="Vinci Demo",theme=gvlabtheme,css="#chatbot {overflow:auto;
         gradio_answer, [chatbot, chat_state, gr_video_time], [chatbot, chat_state, last_img_list]
     )
     run.click(lambda: "", None, text_input)  
-    clear.click(gradio_reset, [chat_state, chat], [chatbot, up_video, text_input, upload_button, chat_state], queue=False)
+    clear.click(gradio_reset, [chat_state], [chatbot, up_video, text_input, upload_button, chat_state], queue=False)
 
 # demo.launch(share=True, enable_queue=True)
 demo.queue(default_concurrency_limit=10)
