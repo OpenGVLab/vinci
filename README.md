@@ -177,7 +177,7 @@ python demovl.py  [--cuda <CUDA_VISIBLE_DEVICES>] [--language chn/eng] [--versio
 <br>
 
 
-## ♥ Origin
+## ♥️ Origin
 The name "Vinci" embodies several layers of meaning:
 
 - It is inspired by the famous Renaissance master Leonardo da Vinci, symbolizing a wealth of knowledge and insight, and suggesting that this assistant can provide equally exceptional service to users.
