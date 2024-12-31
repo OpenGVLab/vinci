@@ -14,6 +14,12 @@ Arxiv, 2024<br>
 -  **Task Planning and Guidance**: Provides task planning based on past interactions and generates visual task demonstrations.
 
 ## 📣 Demo video
+<video controls>
+  <source src="[https://github.com/user-attachments/assets/6be2aa5c-81bb-4a85-b1cf-f08e30d97903.mp4](https://github.com/user-attachments/assets/6be2aa5c-81bb-4a85-b1cf-f08e30d97903)" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+<!-- https://github.com/user-attachments/assets/6be2aa5c-81bb-4a85-b1cf-f08e30d97903 -->
+
 
 [![Watch the video](https://img.youtube.com/vi/R0cz616OiPs/0.jpg)](https://www.youtube.com/watch?v=R0cz616OiPs)
 [![Watch the video](https://img.youtube.com/vi/TOGwhn-vp1s/0.jpg)](https://www.youtube.com/watch?v=TOGwhn-vp1s)
@@ -60,17 +66,13 @@ Then use the browser to access the frontend page：http://YOUR_IP_ADDRESS:19333 
 2. Push live stream
 With an smartphone app or GoPro/DJI cameras, push the stream to: `rtmp://YOUR_IP_ADDRESS/vinci/livestream`
 
-For smartphones, the ["Sinsiam (芯象)"](https://www.sinsam.com/) App can be used from streaming.
-
 With a webcam, use the following command: `ffmpeg -f video4linux2 -framerate 30 -video_size 1280x720 -i /dev/video1 -f alsa -i default  -vcodec libx264 -preset ultrafast -pix_fmt yuv420p -video_size 1280x720   -c:a aac -threads 0 -f flv rtmp://YOUR_IP_ADDRESS:1935/vinci/livestream`
-
-Note that the IP address of the backend should be accessible to the camera devices. E.g., they are in the same network domain.
 
 #### Interact with Online Video Streaming Demo
 1. Activate Model Service: To wake up the model and begin using it, simply say the wake-up phrase: "你好望舒 (Ni hao wang shu)" (Currently, only Chinese wakeup command is supported)
 2. Chat with Vinci: Once activated, you can start chatting with Vinci with speech. The model will respond in text and speech. 
 Tip: For the best experience, speak clearly and at a moderate pace. 
-3. Generate Predictive Visualizations: If you want to generate a predictive visualization of actions, include the keyword "可视化" in your command. 
+3. Generate Predictive Visualizations: If you want to generate a predictive visualization of actions, include the keyword "可视化 （Ke shi hua)" in your command. 
 
 ### 🎬 Gradio Demo for uploaded videos
 ```bash
@@ -78,14 +80,12 @@ python demovl.py  [--cuda <CUDA_VISIBLE_DEVICES>] [--language chn/eng] [--versio
 ```
 - --cuda <CUDA_VISIBLE_DEVICES>: Specify the GPU devices to run the model
 - --language <chn|eng>: Choose the language for the demo (default: chn).
-  - Options: 
-    - chn: Chinese 
-    - eng: English
+  - chn: Chinese 
+  - eng: English
   
 - --version <v0|v1>: Select the model version (default: v1).
-  - Options: 
-    - v0: Optimized for first-person perspective videos.
-    - v1: Generalized model for both first-person and third-person perspective videos.
+  - v0: Optimized for first-person perspective videos.
+  - v1: Generalized model for both first-person and third-person perspective videos.
 
 #### Interact with Gradio Demo
 1. Upload local video file
@@ -110,48 +110,64 @@ python demovl.py  [--cuda <CUDA_VISIBLE_DEVICES>] [--language chn/eng] [--versio
 
 5. Real-Time Interaction：Type your questions in the chat box. The model will respond based on the current frame and historical context.
 
-
 <div align="center">
-<img src="assets/5-chat.PNG" width="75%">
-<figcaption>Describe current action</figcaption>
-</div>
-<br>
-<div align="center">
-<img src="assets/6-chat.PNG" width="75%">
-<figcaption>Retrieve object from the history</figcaption>
+  <figure>
+    <img src="assets/5-chat.PNG" width="75%">
+    <figcaption style="text-align: center;">Describe current action</figcaption>
+  </figure>
 </div>
 <br>
 
 <div align="center">
-<img src="assets/7-chat.PNG" width="75%">
-<figcaption>Summarize previous actions</figcaption>
+  <figure>
+    <img src="assets/6-chat.PNG" width="75%">
+    <figcaption style="text-align: center;">Retrieve object from the history</figcaption>
+  </figure>
 </div>
 <br>
 
 <div align="center">
-<img src="assets/8-chat.PNG" width="75%">
-<figcaption>Scene understanding</figcaption>
+  <figure>
+    <img src="assets/7-chat.PNG" width="75%">
+    <figcaption style="text-align: center;">Summarize previous actions</figcaption>
+  </figure>
 </div>
 <br>
 
 <div align="center">
-<img src="assets/9-chat.PNG" width="75%">
-<figcaption>Temporal grounding</figcaption>
+  <figure>
+    <img src="assets/8-chat.PNG" width="75%">
+    <figcaption style="text-align: center;">Scene understanding</figcaption>
+  </figure>
 </div>
 <br>
 
 <div align="center">
-<img src="assets/10-chat.PNG" width="75%">
-<figcaption>Predict future actions</figcaption>
+  <figure>
+    <img src="assets/9-chat.PNG" width="75%">
+    <figcaption style="text-align: center;">Temporal grounding</figcaption>
+  </figure>
+</div>
+<br>
+
+<div align="center">
+  <figure>
+    <img src="assets/10-chat.PNG" width="75%">
+    <figcaption style="text-align: center;">Predict future actions</figcaption>
+  </figure>
 </div>
 <br>
 
 
 6. Generate future videos: based on the current frame and the historical context, the model can generate a short future video.
 <div align="center">
-<img src="assets/11-gen.png" width="75%">
-<figcaption>Generate future actions</figcaption>
+  <figure>
+    <img src="assets/11-gen.png" width="75%">
+    <figcaption style="text-align: center;">Generate future actions</figcaption>
+  </figure>
 </div>
+<br>
+
 
 ## ♥ Origin
 The name "Vinci" embodies several layers of meaning:
