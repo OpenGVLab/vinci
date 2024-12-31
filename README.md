@@ -14,12 +14,9 @@ Arxiv, 2024<br>
 -  **Task Planning and Guidance**: Provides task planning based on past interactions and generates visual task demonstrations.
 
 ## 📣 Demo video
-<video controls>
-  <source src="[https://github.com/user-attachments/assets/6be2aa5c-81bb-4a85-b1cf-f08e30d97903.mp4](https://github.com/user-attachments/assets/6be2aa5c-81bb-4a85-b1cf-f08e30d97903)" type="video/mp4">
-Your browser does not support the video tag.
-</video>
-<!-- https://github.com/user-attachments/assets/6be2aa5c-81bb-4a85-b1cf-f08e30d97903 -->
+[https://github.com/user-attachments/assets/ab019895-a7fe-4a1c-aa91-5a1e06dd4f2b](https://github.com/user-attachments/assets/ab019895-a7fe-4a1c-aa91-5a1e06dd4f2b)
 
+[https://github.com/user-attachments/assets/6be2aa5c-81bb-4a85-b1cf-f08e30d97903](https://github.com/user-attachments/assets/6be2aa5c-81bb-4a85-b1cf-f08e30d97903)
 
 [![Watch the video](https://img.youtube.com/vi/R0cz616OiPs/0.jpg)](https://www.youtube.com/watch?v=R0cz616OiPs)
 [![Watch the video](https://img.youtube.com/vi/TOGwhn-vp1s/0.jpg)](https://www.youtube.com/watch?v=TOGwhn-vp1s)
