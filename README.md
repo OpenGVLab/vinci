@@ -24,11 +24,18 @@ Arxiv, 2024<br>
 git clone https://github.com/OpenGVLab/vinci.git
 conda env create -f environment.yml
 ```
+Requirements:
+- python 3.8 and above
+- pytorch 2.0 and above are recommended
+- CUDA 11.4 and above are recommended
+- Docker is required when deploying streaming demo
+- Gradio is required when using local web-based demo
+<br>
 ### Downloading Checkpoints
 ```
 bash download.sh
 ```
-Running download.sh will take up 10GB disk space.
+Running download.sh will take up >100GB disk space.
 
 ## 🎓 Getting Started
 We offer two ways to run our Vinci model
@@ -107,7 +114,7 @@ python demovl.py  [--cuda <CUDA_VISIBLE_DEVICES>] [--language chn/eng] [--versio
 <br>
 <div align="center">
 <img src="assets/6-chat.PNG" width="75%">
-<figcaption>Retreive object from the history</figcaption>
+<figcaption>Retrieve object from the history</figcaption>
 </div>
 <br>
 
