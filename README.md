@@ -125,7 +125,7 @@ python demovl.py  [--cuda <CUDA_VISIBLE_DEVICES>] [--language chn/eng] [--versio
 <div align="center">
   <figure>
     <img src="assets/7-chat.PNG" width="75%">
-    <figcaption style="text-align: center;">Summarize previous actions</figcaption>
+    <figcaption>Summarize previous actions</figcaption>
   </figure>
 </div>
 <br>
