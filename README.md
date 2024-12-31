@@ -60,7 +60,11 @@ Then use the browser to access the frontend page：http://YOUR_IP_ADDRESS:19333 
 2. Push live stream
 With an smartphone app or GoPro/DJI cameras, push the stream to: `rtmp://YOUR_IP_ADDRESS/vinci/livestream`
 
+For smartphones, the ["Sinsiam (芯象)"](https://www.sinsam.com/) App can be used from streaming.
+
 With a webcam, use the following command: `ffmpeg -f video4linux2 -framerate 30 -video_size 1280x720 -i /dev/video1 -f alsa -i default  -vcodec libx264 -preset ultrafast -pix_fmt yuv420p -video_size 1280x720   -c:a aac -threads 0 -f flv rtmp://YOUR_IP_ADDRESS:1935/vinci/livestream`
+
+Note that the IP address of the backend should be accessible to the camera devices. E.g., they are in the same network domain.
 
 #### Interact with Online Video Streaming Demo
 1. Activate Model Service: To wake up the model and begin using it, simply say the wake-up phrase: "你好望舒 (Ni hao wang shu)" (Currently, only Chinese wakeup command is supported)
