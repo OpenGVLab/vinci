@@ -32,6 +32,7 @@ Requirements:
 - Docker is required when deploying streaming demo
 - Gradio is required when using local web-based demo
 <br>
+
 ### Downloading Checkpoints
 ```
 bash download.sh
