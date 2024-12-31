@@ -117,7 +117,9 @@ python demovl.py  [--cuda <CUDA_VISIBLE_DEVICES>] [--language chn/eng] [--versio
 <div align="center">
   <figure>
     <img src="assets/6-chat.PNG" width="75%">
-    <figcaption style="text-align: center;">Retrieve object from the history</figcaption>
+    <div style="text-align: center;">
+      <figcaption>Retrieve object from the history</figcaption>
+    </div>
   </figure>
 </div>
 <br>
