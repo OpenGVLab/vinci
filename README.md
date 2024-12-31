@@ -142,6 +142,16 @@ python demovl.py  [--cuda <CUDA_VISIBLE_DEVICES>] [--language chn/eng] [--versio
 <figcaption>Generate future actions</figcaption>
 </div>
 
+## ♥ Origin
+The name "Vinci" embodies several layers of meaning:
+
+- It is inspired by the famous Renaissance master Leonardo da Vinci, symbolizing a wealth of knowledge and insight, and suggesting that this assistant can provide equally exceptional service to users.
+- The word "Vinci" is derived from the Latin "vincere," meaning "to conquer" or "to overcome," implying that this assistant helps users overcome various difficulties and challenges.
+- Phonetically, it resembles "Vision," highlighting the assistant's core function of analyzing and responding based on visual information.
+- It represents a fusion of elegance, wisdom, and innovation, complementing the high-tech nature of first-person camera devices.
+
+望舒 - 出自《楚辞·离骚》：“前望舒使先驱兮，后飞廉使奔属。” 望舒是神话传说中替月亮驾车的天神，描述象征着引导和指引的意义
+
 ## ✒️ Citation
 If this work is helpful for your research, please consider citing us.
 ```
