@@ -109,7 +109,9 @@ python demovl.py  [--cuda <CUDA_VISIBLE_DEVICES>] [--language chn/eng] [--versio
 <div align="center">
   <figure>
     <img src="assets/5-chat.PNG" width="75%">
-    <figcaption style="text-align: center;">Describe current action</figcaption>
+    <div style="text-align: center;">
+    <figcaption>Describe current action</figcaption>
+    </div>
   </figure>
 </div>
 <br>
@@ -127,15 +129,19 @@ python demovl.py  [--cuda <CUDA_VISIBLE_DEVICES>] [--language chn/eng] [--versio
 <div align="center">
   <figure>
     <img src="assets/7-chat.PNG" width="75%">
+    <div style="text-align: center;">
     <figcaption>Summarize previous actions</figcaption>
+    </div>
   </figure>
 </div>
 <br>
 
 <div align="center">
-  <figure style="text-align: center;">
+  <figure>
     <img src="assets/8-chat.PNG" width="75%">
+    <div style="text-align: center;">
     <figcaption>Scene understanding</figcaption>
+    </div>
   </figure>
 </div>
 <br>
@@ -143,7 +149,9 @@ python demovl.py  [--cuda <CUDA_VISIBLE_DEVICES>] [--language chn/eng] [--versio
 <div align="center">
   <figure>
     <img src="assets/9-chat.PNG" width="75%">
-    <figcaption style="text-align: center;">Temporal grounding</figcaption>
+    <div style="text-align: center;">
+    <figcaption>Temporal grounding</figcaption>
+    </div>
   </figure>
 </div>
 <br>
@@ -151,7 +159,9 @@ python demovl.py  [--cuda <CUDA_VISIBLE_DEVICES>] [--language chn/eng] [--versio
 <div align="center">
   <figure>
     <img src="assets/10-chat.PNG" width="75%">
-    <figcaption style="text-align: center;">Predict future actions</figcaption>
+    <div style="text-align: center;">
+    <figcaption>Predict future actions</figcaption>
+    </div>
   </figure>
 </div>
 <br>
