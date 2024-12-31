@@ -131,9 +131,9 @@ python demovl.py  [--cuda <CUDA_VISIBLE_DEVICES>] [--language chn/eng] [--versio
 <br>
 
 <div align="center">
-  <figure>
+  <figure style="text-align: center;">
     <img src="assets/8-chat.PNG" width="75%">
-    <figcaption style="text-align: center;">Scene understanding</figcaption>
+    <figcaption>Scene understanding</figcaption>
   </figure>
 </div>
 <br>
