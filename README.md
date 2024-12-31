@@ -18,8 +18,6 @@ Arxiv, 2024<br>
 
 [https://github.com/user-attachments/assets/6be2aa5c-81bb-4a85-b1cf-f08e30d97903](https://github.com/user-attachments/assets/6be2aa5c-81bb-4a85-b1cf-f08e30d97903)
 
-[![Watch the video](https://img.youtube.com/vi/R0cz616OiPs/0.jpg)](https://www.youtube.com/watch?v=R0cz616OiPs)
-[![Watch the video](https://img.youtube.com/vi/TOGwhn-vp1s/0.jpg)](https://www.youtube.com/watch?v=TOGwhn-vp1s)
 
 
 ## 🔨 Installation
