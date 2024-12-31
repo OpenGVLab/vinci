@@ -2,7 +2,18 @@
 <a src="https://img.shields.io/badge/cs.CV-2412.21080-b31b1b?logo=arxiv&logoColor=red" href="https://arxiv.org/abs/2412.21080"> <img src="https://img.shields.io/badge/cs.CV-2412.21080-b31b1b?logo=arxiv&logoColor=red">
 </a>  <a href="https://huggingface.co/hyf015/Vinci-8B-ckpt"><img src="https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-sm-dark.svg" alt="Open in Spaces"> </a> 
 
-## 📣 Demo
+> **Vinci: A Real-time Embodied Smart Assistant based on Egocentric Vision-Language Model**<br>
+Arxiv, 2024<br>
+
+## 💬 TL,DR
+
+- **Overview**: A real-time, embodied smart assistant based on an egocentric vision-language model.
+-  **Portable Device Compatibility**: Designed for smartphones and wearable cameras, operating in an "always on" mode.
+-  **Hands-Free Interaction**: Users engage in natural conversations to ask questions and get responses delivered via audio.
+-  **Real-Time Video Processing**: Processes long video streams to answer queries about current and historical observations.
+-  **Task Planning and Guidance**: Provides task planning based on past interactions and generates visual task demonstrations.
+
+## 📣 Demo video
 
 [![Watch the video](https://img.youtube.com/vi/R0cz616OiPs/0.jpg)](https://www.youtube.com/watch?v=R0cz616OiPs)
 [![Watch the video](https://img.youtube.com/vi/TOGwhn-vp1s/0.jpg)](https://www.youtube.com/watch?v=TOGwhn-vp1s)
