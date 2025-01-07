@@ -190,7 +190,7 @@ The name "Vinci" embodies several layers of meaning:
 ## ✒️ Citation
 If this work is helpful for your research, please consider citing us.
 ```
-@article{pei2024egovideo,
+@article{vinci,
   title={Vinci: A Real-time Embodied Smart Assistant based on Egocentric Vision-Language Model},
   author={Huang, Yifei and Xu, Jilan and Pei, Baoqi and He, Yuping and Chen, Guo and Yang, Lijin and Chen, Xinyuan and Wang, Yaohui and Nie, Zheng and Liu, Jinyao and Fan, Guoshun and Lin, Dechen and Fang, Fang and Li, Kunpeng and Yuan, Chang and Wang, Yali and Qiao, Yu and Wang, Limin},
   journal={arXiv preprint arXiv:2412.21080},
