@@ -72,7 +72,7 @@ Tip: For the best experience, speak clearly and at a moderate pace.
 
 ### 🎬 Gradio Demo for uploaded videos
 ```bash
-python demovl.py  [--cuda <CUDA_VISIBLE_DEVICES>] [--language chn/eng] [--version v0/v1]
+python demovl.py [--language chn/eng] [--version v0/v1]
 ```
 - --cuda <CUDA_VISIBLE_DEVICES>: Specify the GPU devices to run the model
 - --language <chn|eng>: Choose the language for the demo (default: chn).
