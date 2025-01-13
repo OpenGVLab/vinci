@@ -60,7 +60,7 @@ sudo ./boot.sh {start|stop|restart} [--cuda <CUDA_VISIBLE_DEVICES>] [--language 
 Then use the browser to access the frontend page：http://YOUR_IP_ADDRESS:19333 （E.g., http://102.2.52.16:19333）
 
 2. Push live stream
-With an smartphone app or GoPro/DJI cameras, push the stream to: `rtmp://YOUR_IP_ADDRESS/vinci/livestream`
+With a smartphone app or GoPro/DJI cameras, push the stream to: `rtmp://YOUR_IP_ADDRESS/vinci/livestream`
 
 With a webcam, use the following command: `ffmpeg -f video4linux2 -framerate 30 -video_size 1280x720 -i /dev/video1 -f alsa -i default  -vcodec libx264 -preset ultrafast -pix_fmt yuv420p -video_size 1280x720   -c:a aac -threads 0 -f flv rtmp://YOUR_IP_ADDRESS:1935/vinci/livestream`
 
